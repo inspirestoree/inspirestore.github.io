@@ -4,19 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>INSPIRE | Local Brand</title>
-              <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+             
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-    const SUPABASE_URL = "https://oboallakgiufpjjljwhu.supabase.co"
-    const SUPABASE_ANON_KEY = "sb_publishable_PisJeNMbCK_jTgItKpoCGg_kbgvIFGi";
+  // 1. تهيئة Supabase
+  const SUPABASE_URL = "https://oboallakgiufpjjljwhu.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_PisJeNMbCK_jTgItKpoCGg_kbgvIFGi";
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const supabaseClient = supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_ANON_KEY
-    );
+  // 2. دالة لجلب المنتجات وعرضها
+  async function fetchProducts() {
+    const { data: products, error } = await supabaseClient
+      .from('products')
+      .select('*');
+
+    if (error) {
+      console.error('حدث خطأ أثناء جلب المنتجات:', error);
+      return;
+    }
+
+    const container = document.getElementById('products-container');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    products.forEach(product => {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      card.innerHTML = `
+        <div class="product-image">
+          <img src="${product.image_url || ''}" alt="${product.name || ''}">
+        </div>
+        <div class="product-info">
+          <h3 class="product-title">${product.name || ''}</h3>
+          <p class="price">${product.price || 0} ج.م</p>
+          <button type="button" class="add-to-cart-btn">
+            <i class="fa-solid fa-bag-shopping"></i> أضف للسلة
+          </button>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+      // 3. تشغيل الدالة عند تحميل الصفحة
+ document.addEventListener('DOMContentLoaded', fetchProducts);
     
-</script>   
-    
+</script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
