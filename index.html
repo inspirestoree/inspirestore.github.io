@@ -49,7 +49,225 @@
 
       // 3. تشغيل الدالة عند تحميل الصفحة
  document.addEventListener('DOMContentLoaded', fetchProducts);
-    
+ <!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المتجر الإلكتروني</title>
+    <!-- Supabase JS Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { font-family: sans-serif; margin: 20px; background-color: #f9f9f9; }
+        .product-card { border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 10px; background: #fff; }
+        .modal-overlay { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.5); align-items:center; justify-content:center; }
+        .modal-box { background: #fff; padding: 20px; border-radius: 8px; width: 90%; max-width: 400px; position: relative; }
+        .close-btn { position: absolute; top: 10px; left: 10px; border: none; background: transparent; font-size: 20px; cursor: pointer; }
+        .input-group { margin-bottom: 12px; display: flex; flex-direction: column; }
+        .input-group label { margin-bottom: 5px; }
+        .input-group input, .input-group select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        .checkout-btn { width: 100%; padding: 10px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <!-- CART BUTTON -->
+    <button id="cartButton">السلة (<span id="cartCount">0</span>)</button>
+
+    <!-- CART MODAL -->
+    <div class="modal-overlay" id="cartModal">
+        <div class="modal-box">
+            <button class="close-btn" id="closeCartBtn">&times;</button>
+
+            <h2>إتمام الطلب</h2>
+
+            <div id="selectedProductInfo" style="margin:15px 0;">
+                لا يوجد منتج في السلة
+            </div>
+
+            <div class="input-group">
+                <label>اسم العميل</label>
+                <input type="text" id="orderCustomerName" placeholder="اكتب اسمك بالكامل" required>
+            </div>
+
+            <div class="input-group">
+                <label>رقم الهاتف</label>
+                <input type="tel" id="orderCustomerPhone" placeholder="01xxxxxxxxx" required>
+            </div>
+
+            <div class="input-group">
+                <label>العنوان</label>
+                <input type="text" id="orderCustomerAddress" placeholder="اكتب عنوان التوصيل" required>
+            </div>
+
+            <div class="input-group">
+                <label>المقاس</label>
+                <select id="orderCustomerSize">
+                    <option value="">اختر المقاس</option>
+                    <option value="S">S</option>
+                    <option value="M">M</option>
+                    <option value="L">L</option>
+                    <option value="XL">XL</option>
+                    <option value="XXL">XXL</option>
+                </select>
+            </div>
+
+            <button type="button" class="checkout-btn" id="confirmOrderBtn">
+                تأكيد الطلب
+            </button>
+
+            <p id="orderMessage" style="margin-top:12px;text-align:center;"></p>
+        </div>
+    </div>
+
+    <script>
+        // ================= SUPABASE CLIENT =================
+        const SUPABASE_URL = "https://oboallakgiufpjjljwhu.supabase.co/";
+        const SUPABASE_ANON_KEY = "sb_publishable_PisJeNMbCK_jTgItKpoCGg_kbgvIFGi";
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // ================= CART & ORDERS =================
+        let cart = [];
+
+        const cartCountEl = document.getElementById("cartCount");
+        const cartModalCount = document.getElementById("cartModalCount");
+        const selectedProductInfo = document.getElementById("selectedProductInfo");
+        const cartModal = document.getElementById("cartModal");
+        const closeCartBtn = document.getElementById("closeCartBtn");
+
+        function updateCartUI() {
+            cartCountEl.textContent = cart.length;
+            
+            if (cartModalCount) {
+                cartModalCount.textContent = cart.length;
+            }
+
+            if (cart.length > 0) {
+                const product = cart[0];
+
+                selectedProductInfo.innerHTML = `
+                    <div style="padding:15px;background:#f5f5f5;border-radius:8px;">
+                        <strong>${product.name}</strong>
+                        <br>
+                        السعر: ${product.price} ج.م
+                    </div>
+                `;
+            } else {
+                selectedProductInfo.textContent = "لا يوجد منتج في السلة";
+            }
+        }
+
+        // إضافة المنتج للسلة
+        document.addEventListener("click", (e) => {
+            const button = e.target.closest(".add-to-cart-btn");
+            if (!button) return;
+
+            const card = button.closest(".product-card");
+            if (!card) return;
+
+            const name = card.querySelector(".product-title")?.textContent.trim() || "";
+            const priceText = card.querySelector(".price")?.textContent || "0";
+            const price = parseFloat(priceText.replace(/[^\d.]/g, "")) || 0;
+
+            cart.push({
+                name: name,
+                price: price
+            });
+
+            updateCartUI();
+            alert("تم إضافة المنتج إلى السلة!");
+        });
+
+        // فتح وإغلاق السلة
+        document.getElementById("cartButton").addEventListener("click", () => {
+            if (cart.length === 0) {
+                alert("السلة فارغة، أضف منتج أولاً.");
+                return;
+            }
+            updateCartUI();
+            cartModal.style.display = "flex";
+        });
+
+        if (closeCartBtn) {
+            closeCartBtn.addEventListener("click", () => {
+                cartModal.style.display = "none";
+            });
+        }
+
+        // ================= CONFIRM ORDER =================
+        document.getElementById("confirmOrderBtn").addEventListener("click", async () => {
+            if (cart.length === 0) {
+                alert("السلة فارغة.");
+                return;
+            }
+
+            const customerName = document.getElementById("orderCustomerName").value.trim();
+            const customerPhone = document.getElementById("orderCustomerPhone").value.trim();
+            const customerAddress = document.getElementById("orderCustomerAddress").value.trim();
+            const customerSize = document.getElementById("orderCustomerSize").value;
+            const message = document.getElementById("orderMessage");
+
+            // التحقق من البيانات
+            if (!customerName || !customerPhone || !customerAddress || !customerSize) {
+                message.style.color = "red";
+                message.textContent = "من فضلك املأ جميع البيانات.";
+                return;
+            }
+
+            const product = cart[0];
+            const totalPrice = product.price;
+            const confirmButton = document.getElementById("confirmOrderBtn");
+
+            confirmButton.disabled = true;
+            confirmButton.textContent = "جاري إرسال الطلب...";
+
+            // البيانات التي سيتم إرسالها إلى Supabase (متوافقة مع الأعمدة)
+            const orderData = {
+                customer_name: customerName,
+                customer_address: customerAddress,
+                customer_phone: customerPhone,
+                products: product.name,
+                total_price: totalPrice,
+                customer_size: customerSize
+            };
+
+            const { data, error } = await supabaseClient
+                .from("orders")
+                .insert([orderData])
+                .select();
+
+            if (error) {
+                console.error("Order Error:", error);
+                message.style.color = "red";
+                message.textContent = "حصل خطأ أثناء إرسال الطلب. راجع إعدادات Supabase.";
+                confirmButton.disabled = false;
+                confirmButton.textContent = "تأكيد الطلب";
+                return;
+            }
+
+            // نجاح الطلب
+            message.style.color = "green";
+            message.textContent = "تم تأكيد طلبك بنجاح ❤️";
+
+            cart = [];
+            updateCartUI();
+
+            document.getElementById("orderCustomerName").value = "";
+            document.getElementById("orderCustomerPhone").value = "";
+            document.getElementById("orderCustomerAddress").value = "";
+            document.getElementById("orderCustomerSize").value = "";
+
+            confirmButton.disabled = false;
+            confirmButton.textContent = "تأكيد الطلب";
+            
+            setTimeout(() => {
+                cartModal.style.display = "none";
+                message.textContent = "";
+            }, 2000);
+        });
+    </script>
+</body>
+</html>   
 </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
