@@ -209,6 +209,32 @@
             gap: 16px;
         }
 
+        .language-switch {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px;
+            border: 1px solid rgba(255,255,255,.2);
+            border-radius: 999px;
+            background: rgba(255,255,255,.06);
+        }
+
+        .language-switch button {
+            border: 0;
+            border-radius: 999px;
+            padding: 5px 9px;
+            background: transparent;
+            color: #aaa;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .language-switch button.active {
+            background: #fff;
+            color: #111;
+        }
+
         .social-icon {
             color: #fff;
             font-size: 18px;
@@ -277,133 +303,53 @@
         }
 
         /* ================= PRODUCTS ================= */
-        .products-section {
-            max-width: 1200px;
-            margin: auto;
-            padding: 60px 20px;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 24px;
-        }
-
+        .products-section { max-width: 1200px; margin: auto; padding: 55px 20px; }
+        .section-header { text-align: center; margin-bottom: 30px; }
+        .products-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
         .product-card {
-            overflow: hidden;
-            background: #fff;
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            box-shadow: 0 5px 18px rgba(0,0,0,.05);
+            overflow: hidden; min-width: 0; background: #fff; border: 1px solid var(--border);
+            border-radius: 12px; box-shadow: 0 4px 14px rgba(0,0,0,.05); cursor: pointer;
             transition: transform .2s ease, box-shadow .2s ease;
         }
-
-        .product-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 30px rgba(0,0,0,.09);
+        .product-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0,0,0,.10); }
+        .product-image { position: relative; aspect-ratio: 1 / 1.05; background: #f0f0f0; }
+        .product-image img { width: 100%; height: 100%; display: block; object-fit: cover; }
+        .product-info { padding: 12px 13px 14px; }
+        .category { color: var(--muted); font-size: 11px; }
+        .product-title { margin: 3px 0 5px; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .price { margin: 0; font-size: 14px; font-weight: 800; }
+        .product-hint { margin-top: 8px; color: #888; font-size: 11px; }
+        .add-to-cart-btn, .checkout-btn, .submit-btn {
+            width: 100%; border: 0; border-radius: 8px; padding: 12px; background: #111; color: #fff; font-weight: 700;
         }
-
-        .product-image {
-            position: relative;
-            aspect-ratio: 1 / 1;
-            background: #eee;
+        .add-to-cart-btn:hover, .checkout-btn:hover, .submit-btn:hover { opacity: .88; }
+        .empty-state, .loading-state, .error-state {
+            grid-column: 1 / -1; padding: 30px; text-align: center; background: #fff; border-radius: 12px;
         }
-
-        .product-image img {
-            width: 100%;
-            height: 100%;
-            display: block;
-            object-fit: cover;
-        }
-
-        .product-info { padding: 18px; }
-
-        .category {
-            color: var(--muted);
-            font-size: 12px;
-        }
-
-        .product-title {
-            margin: 5px 0 8px;
-            font-size: 17px;
-        }
-
-        .price {
-            margin-bottom: 12px;
-            font-weight: 800;
-        }
-
-        .old-price {
-            margin-right: 7px;
-            color: #aaa;
-            text-decoration: line-through;
-            font-size: 13px;
-            font-weight: 400;
-        }
-
-        .size-selector { margin-bottom: 14px; }
-
-        .size-selector label {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 12px;
-        }
-
-        .size-options {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .size-btn {
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 6px 12px;
-            background: #f9f9f9;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        .size-btn.active {
-            background: #111;
-            border-color: #111;
-            color: #fff;
-        }
-
-        .add-to-cart-btn,
-        .checkout-btn,
-        .submit-btn {
-            width: 100%;
-            border: 0;
-            border-radius: 8px;
-            padding: 12px;
-            background: #111;
-            color: #fff;
-            font-weight: 700;
-        }
-
-        .add-to-cart-btn:hover,
-        .checkout-btn:hover,
-        .submit-btn:hover {
-            opacity: .88;
-        }
-
-        .empty-state,
-        .loading-state,
-        .error-state {
-            grid-column: 1 / -1;
-            padding: 30px;
-            text-align: center;
-            background: #fff;
-            border-radius: 12px;
-        }
-
         .error-state { color: var(--danger); }
+
+        /* ================= PRODUCT DETAILS ================= */
+        .product-detail-modal { z-index: 2100; }
+        .product-detail-box { width: min(100%, 900px); padding: 22px; }
+        .product-detail-layout { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 24px; align-items: start; }
+        .detail-gallery { min-width: 0; }
+        .detail-main-image { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; border-radius: 12px; background: #f0f0f0; }
+        .detail-thumbnails { display: flex; gap: 8px; overflow-x: auto; padding-top: 10px; }
+        .detail-thumb { flex: 0 0 68px; width: 68px; height: 68px; padding: 0; border: 2px solid transparent; border-radius: 8px; overflow: hidden; background: #eee; }
+        .detail-thumb.active { border-color: #111; }
+        .detail-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .detail-info h2 { margin-bottom: 7px; font-size: 25px; }
+        .detail-price { margin-bottom: 18px; font-size: 21px; font-weight: 900; }
+        .detail-section { margin: 16px 0; }
+        .detail-label { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 800; }
+        .detail-options { display: flex; flex-wrap: wrap; gap: 7px; }
+        .detail-option { min-width: 44px; padding: 7px 11px; border: 1px solid #ddd; border-radius: 7px; background: #fafafa; font-weight: 700; font-size: 12px; }
+        .detail-option.active { background: #111; color: #fff; border-color: #111; }
+        .color-swatch { min-width: 60px; }
+        .quantity-control { display: inline-flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; }
+        .quantity-control button { width: 38px; height: 38px; border: 0; background: #f5f5f5; font-size: 18px; }
+        .quantity-control input { width: 52px; height: 38px; border: 0; text-align: center; font-weight: 800; outline: none; }
+        .detail-add-btn { margin-top: 8px; }
 
         /* ================= MODALS ================= */
         .modal-overlay,
@@ -664,12 +610,18 @@
             text-align: center;
         }
 
+        @media (max-width: 900px) {
+            .products-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .product-detail-layout { grid-template-columns: 1fr; }
+        }
+
         @media (max-width: 650px) {
             .navbar { padding: 12px 14px; }
             .nav-container { gap: 10px; }
             .nav-actions { gap: 10px; }
             .social-icon { display: none; }
             .account-btn { padding: 6px 10px; }
+            .language-switch button { padding: 5px 7px; }
             .hero-section { padding: 65px 15px; }
             .products-section { padding: 45px 14px; }
             .modal-box, .auth-box { padding: 24px 18px; }
@@ -719,6 +671,11 @@
                         <i class="fa-brands fa-whatsapp"></i>
                     </a>
 
+                    <div class="language-switch" aria-label="Language selector">
+                        <button type="button" id="langArBtn" data-lang="ar" class="active">عربي</button>
+                        <button type="button" id="langEnBtn" data-lang="en">EN</button>
+                    </div>
+
                     <button class="cart-icon" id="cartButton" type="button" aria-label="السلة">
                         <i class="fa-solid fa-bag-shopping"></i>
                         <span class="cart-count" id="cartCount">0</span>
@@ -733,35 +690,77 @@
 
         <section class="hero-section" id="home">
             <div class="hero-content">
-                <h1>اكتشف ستايلك</h1>
-                <p>تصاميم عصرية للوكال براند صنعت علشان تعبّر عنك.</p>
-                <a href="#products" class="hero-button">اكتشف المنتجات</a>
+                <h1 id="heroTitle" data-i18n="heroTitle">اكتشف ستايلك</h1>
+                <p id="heroSubtitle" data-i18n="heroSubtitle">تصاميم عصرية للوكال براند صنعت علشان تعبّر عنك.</p>
+                <a href="#products" class="hero-button" data-i18n="discoverProducts">اكتشف المنتجات</a>
             </div>
         </section>
 
         <section class="products-section" id="products">
             <div class="section-header">
-                <h2>أحدث تشكيلات اللوكال براند</h2>
+                <h2 id="productsTitle" data-i18n="productsTitle">أحدث تشكيلات اللوكال براند</h2>
             </div>
             <div id="products-container" class="products-grid">
                 <div class="loading-state">جاري تحميل المنتجات...</div>
             </div>
         </section>
 
+        <!-- ================= PRODUCT DETAILS ================= -->
+        <div class="modal-overlay product-detail-modal" id="productDetailModal" aria-hidden="true">
+            <div class="modal-box product-detail-box" role="dialog" aria-modal="true" aria-labelledby="detailProductName">
+                <button class="close-btn" id="closeProductDetailBtn" type="button" aria-label="إغلاق">&times;</button>
+                <div class="product-detail-layout">
+                    <div class="detail-gallery">
+                        <img id="detailMainImage" class="detail-main-image" src="" alt="">
+                        <div id="detailThumbnails" class="detail-thumbnails"></div>
+                    </div>
+                    <div class="detail-info">
+                        <div id="detailCategory" class="category"></div>
+                        <h2 id="detailProductName"></h2>
+                        <div id="detailProductPrice" class="detail-price"></div>
+
+                        <div class="detail-section">
+                            <span class="detail-label" data-i18n="size">المقاس</span>
+                            <div id="detailSizes" class="detail-options"></div>
+                        </div>
+
+                        <div class="detail-section">
+                            <span class="detail-label" data-i18n="color">اللون</span>
+                            <div id="detailColors" class="detail-options"></div>
+                        </div>
+
+                        <div class="detail-section">
+                            <span class="detail-label" id="quantityLabel" data-i18n="quantity">الكمية (من 1 إلى 20)</span>
+                            <div class="quantity-control">
+                                <button id="quantityMinus" type="button" aria-label="تقليل الكمية">−</button>
+                                <input id="detailQuantity" type="number" min="1" max="20" value="1" inputmode="numeric" aria-label="الكمية">
+                                <button id="quantityPlus" type="button" aria-label="زيادة الكمية">+</button>
+                            </div>
+                        </div>
+
+                        <button id="detailAddToCartBtn" type="button" class="add-to-cart-btn detail-add-btn" data-i18n="addToCart">
+                            <i class="fa-solid fa-bag-shopping"></i> أضف للسلة
+                        </button>
+                        <p id="detailMessage" class="message" aria-live="polite"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- ================= CART ================= -->
         <div class="modal-overlay" id="cartModal" aria-hidden="true">
             <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
                 <button class="close-btn" id="closeCartBtn" type="button" aria-label="إغلاق">&times;</button>
-                <h2 id="cartTitle">سلة المشتريات</h2>
+                <h2 id="cartTitle" data-i18n="cartTitle">سلة المشتريات</h2>
 
                 <div id="cartItems" class="cart-items"></div>
 
                 <div class="cart-total">
-                    <span>الإجمالي</span>
+                    <span data-i18n="total">الإجمالي</span>
                     <span id="cartTotal">0 ج.م</span>
                 </div>
 
-                <button type="button" class="checkout-btn" id="checkoutBtn">
+                <button type="button" class="checkout-btn" id="checkoutBtn" data-i18n="checkout">
                     إتمام الطلب
                 </button>
             </div>
@@ -771,39 +770,39 @@
         <div class="modal-overlay" id="checkoutModal" aria-hidden="true">
             <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="checkoutTitle">
                 <button class="close-btn" id="closeCheckoutBtn" type="button" aria-label="إغلاق">&times;</button>
-                <h2 id="checkoutTitle">بيانات التوصيل</h2>
+                <h2 id="checkoutTitle" data-i18n="deliveryData">بيانات التوصيل</h2>
 
                 <form id="checkoutForm" class="checkout-form">
                     <div class="input-group">
-                        <label for="orderCustomerName">الاسم بالكامل</label>
+                        <label for="orderCustomerName" data-i18n="fullName">الاسم بالكامل</label>
                         <input type="text" id="orderCustomerName" autocomplete="name" maxlength="100" required>
                     </div>
 
                     <div class="input-group">
-                        <label for="orderCustomerPhone">رقم الهاتف</label>
+                        <label for="orderCustomerPhone" data-i18n="phone">رقم الهاتف</label>
                         <input type="tel" id="orderCustomerPhone" inputmode="numeric"
                                autocomplete="tel" placeholder="01xxxxxxxxx" maxlength="11" required>
                     </div>
 
                     <div class="input-group">
-                        <label for="orderCustomerAddress">عنوان التوصيل</label>
+                        <label for="orderCustomerAddress" data-i18n="address">عنوان التوصيل</label>
                         <input type="text" id="orderCustomerAddress" autocomplete="street-address"
                                maxlength="250" required>
                     </div>
 
                     <div class="input-group">
-                        <label for="orderCustomerSize">المقاس</label>
-                        <select id="orderCustomerSize" required>
-                            <option value="">اختر المقاس</option>
-                            <option value="S">S</option>
-                            <option value="M">M</option>
-                            <option value="L">L</option>
-                            <option value="XL">XL</option>
-                            <option value="XXL">XXL</option>
-                        </select>
+                        <label data-i18n="paymentMethod">طريقة الدفع</label>
+                        <input type="text" value="Vodafone Cash" readonly>
                     </div>
 
-                    <button type="submit" class="checkout-btn" id="confirmOrderBtn">
+                    <p id="vodafoneHint" data-i18n="vodafoneHint" style="font-size:12px;color:#666;margin:0;">حوّل المبلغ إلى <strong>01533395470</strong> عبر Vodafone Cash، ثم اكتب رقم الهاتف الذي تم التحويل منه.</p>
+
+                    <div class="input-group">
+                        <label for="vodafoneCashSender" data-i18n="senderPhone">رقم الهاتف المحوِّل منه (اختياري)</label>
+                        <input type="tel" id="vodafoneCashSender" inputmode="numeric" maxlength="11" placeholder="01xxxxxxxxx">
+                    </div>
+
+                    <button type="submit" class="checkout-btn" id="confirmOrderBtn" data-i18n="confirmOrder">
                         تأكيد الطلب
                     </button>
 
@@ -816,41 +815,41 @@
         <div class="auth-modal-overlay" id="authModal" aria-hidden="true">
             <div class="auth-box" role="dialog" aria-modal="true" aria-labelledby="authTitle">
                 <button class="close-btn" id="closeAuthBtn" type="button" aria-label="إغلاق">&times;</button>
-                <h2 id="authTitle">حسابي</h2>
+                <h2 id="authTitle" data-i18n="account">حسابي</h2>
 
                 <div class="auth-tabs">
-                    <button class="tab-btn active" id="loginTabBtn" type="button">تسجيل الدخول</button>
-                    <button class="tab-btn" id="registerTabBtn" type="button">إنشاء حساب</button>
+                    <button class="tab-btn active" id="loginTabBtn" type="button" data-i18n="login">تسجيل الدخول</button>
+                    <button class="tab-btn" id="registerTabBtn" type="button" data-i18n="register">إنشاء حساب</button>
                 </div>
 
                 <form id="loginForm" class="auth-form active">
                     <div class="input-group">
-                        <label for="loginEmail">البريد الإلكتروني</label>
+                        <label for="loginEmail" data-i18n="email">البريد الإلكتروني</label>
                         <input type="email" id="loginEmail" autocomplete="email" required>
                     </div>
 
                     <div class="input-group">
-                        <label for="loginPassword">كلمة المرور</label>
+                        <label for="loginPassword" data-i18n="password">كلمة المرور</label>
                         <input type="password" id="loginPassword" autocomplete="current-password" minlength="6" required>
                     </div>
 
-                    <button type="submit" class="submit-btn">دخول</button>
+                    <button type="submit" class="submit-btn" data-i18n="login">دخول</button>
                     <p id="loginMessage" class="message" aria-live="polite"></p>
                 </form>
 
                 <form id="registerForm" class="auth-form">
                     <div class="input-group">
-                        <label for="regName">الاسم بالكامل</label>
+                        <label for="regName" data-i18n="fullName">الاسم بالكامل</label>
                         <input type="text" id="regName" maxlength="100" required>
                     </div>
 
                     <div class="input-group">
-                        <label for="regEmail">البريد الإلكتروني</label>
+                        <label for="regEmail" data-i18n="email">البريد الإلكتروني</label>
                         <input type="email" id="regEmail" autocomplete="email" required>
                     </div>
 
                     <div class="input-group">
-                        <label for="regPassword">كلمة المرور</label>
+                        <label for="regPassword" data-i18n="password">كلمة المرور</label>
                         <input type="password" id="regPassword" autocomplete="new-password" minlength="6" required>
                     </div>
 
@@ -861,7 +860,7 @@
         </div>
 
         <footer>
-            <p>© 2026 INSPIRE. جميع الحقوق محفوظة.</p>
+            <p id="footerText" data-i18n="footer">© 2026 INSPIRE. جميع الحقوق محفوظة.</p>
         </footer>
     </div>
 
@@ -911,10 +910,114 @@
 
         const $ = (id) => document.getElementById(id);
 
+        const translations = {
+            ar: {
+                dir: "rtl", langCode: "ar",
+                menuHome: "الرئيسية", products: "المنتجات", offers: "العروض والخصومات",
+                cart: "السلة", account: "حسابي", heroTitle: "اكتشف ستايلك",
+                heroSubtitle: "تصاميم عصرية للوكال براند صنعت علشان تعبّر عنك.",
+                discoverProducts: "اكتشف المنتجات", productsTitle: "أحدث تشكيلات اللوكال براند",
+                loading: "جاري تحميل المنتجات...", emptyProducts: "لا توجد منتجات حالياً.",
+                details: "اضغط لعرض التفاصيل", product: "منتج",
+                size: "المقاس", color: "اللون", quantity: "الكمية (من 1 إلى 20)",
+                addToCart: "أضف للسلة", cartTitle: "سلة المشتريات", total: "الإجمالي",
+                checkout: "إتمام الطلب", emptyCart: "السلة فارغة.",
+                deliveryData: "بيانات التوصيل", fullName: "الاسم بالكامل", phone: "رقم الهاتف",
+                address: "عنوان التوصيل", paymentMethod: "طريقة الدفع", senderPhone: "رقم الهاتف المحوِّل منه (اختياري)",
+                vodafoneHint: "حوّل المبلغ إلى <strong>01533395470</strong> عبر Vodafone Cash، ثم اكتب رقم الهاتف الذي تم التحويل منه.",
+                confirmOrder: "تأكيد الطلب", account: "حسابي", login: "تسجيل الدخول", register: "إنشاء حساب",
+                email: "البريد الإلكتروني", password: "كلمة المرور", createAccount: "إنشاء حساب",
+                chatbot: "المساعد الذكي - INSPIRE", chatWelcome: "أهلاً بك! أنا مساعد INSPIRE الذكي. كيف يمكنني مساعدتك؟",
+                chatPlaceholder: "اكتب استفسارك هنا...", send: "إرسال", footer: "© 2026 INSPIRE. جميع الحقوق محفوظة.",
+                currency: "ج.م", orderSending: "جاري إرسال الطلب...", orderSuccess: "تم تأكيد طلبك بنجاح! سنتواصل معك لتأكيد التوصيل.",
+                fillData: "من فضلك املأ جميع البيانات.", invalidPhone: "اكتب رقم هاتف مصري صحيح مكون من 11 رقم ويبدأ بـ 010 أو 011 أو 012 أو 015.",
+                invalidSender: "رقم التحويل لازم يكون رقم موبايل مصري صحيح من 11 رقم.", orderError: "لم يتم إرسال الطلب. تأكد من إعداد جدول orders وRLS في Supabase.",
+                authLoginSuccess: "تم تسجيل الدخول بنجاح.", authRegisterSuccess: "تم إنشاء الحساب. لو تأكيد البريد الإلكتروني مفعل، راجع بريدك.",
+                authLoginLoading: "جاري تسجيل الدخول...", authRegisterLoading: "جاري إنشاء الحساب...",
+                cartEmptyAlert: "السلة فارغة، أضف منتجاً أولاً.", added: "تم إضافة المنتج إلى السلة.",
+                whatsapp: "واتساب", language: "اللغة"
+            },
+            en: {
+                dir: "ltr", langCode: "en",
+                menuHome: "Home", products: "Products", offers: "Offers",
+                cart: "Cart", account: "Account", heroTitle: "Discover Your Style",
+                heroSubtitle: "Modern local-brand designs made to express you.",
+                discoverProducts: "Explore Products", productsTitle: "Latest Local Brand Collection",
+                loading: "Loading products...", emptyProducts: "No products available right now.",
+                details: "Click to view details", product: "Product",
+                size: "Size", color: "Color", quantity: "Quantity (1 to 20)",
+                addToCart: "Add to Cart", cartTitle: "Shopping Cart", total: "Total",
+                checkout: "Checkout", emptyCart: "Your cart is empty.",
+                deliveryData: "Delivery Details", fullName: "Full Name", phone: "Phone Number",
+                address: "Delivery Address", paymentMethod: "Payment Method", senderPhone: "Sender Phone Number (optional)",
+                vodafoneHint: "Transfer the amount to <strong>01533395470</strong> via Vodafone Cash, then enter the phone number used for the transfer.",
+                confirmOrder: "Confirm Order", account: "Account", login: "Log In", register: "Create Account",
+                email: "Email", password: "Password", createAccount: "Create Account",
+                chatbot: "INSPIRE Smart Assistant", chatWelcome: "Welcome! I’m the INSPIRE smart assistant. How can I help you?",
+                chatPlaceholder: "Type your question here...", send: "Send", footer: "© 2026 INSPIRE. All rights reserved.",
+                currency: "EGP", orderSending: "Sending order...", orderSuccess: "Order confirmed successfully! We will contact you to confirm delivery.",
+                fillData: "Please fill in all required fields.", invalidPhone: "Enter a valid 11-digit Egyptian mobile number starting with 010, 011, 012, or 015.",
+                invalidSender: "The transfer phone number must be a valid 11-digit Egyptian mobile number.", orderError: "The order could not be sent. Check the orders table and RLS settings in Supabase.",
+                authLoginSuccess: "Logged in successfully.", authRegisterSuccess: "Account created. If email confirmation is enabled, check your inbox.",
+                authLoginLoading: "Logging in...", authRegisterLoading: "Creating account...",
+                cartEmptyAlert: "Your cart is empty. Add a product first.", added: "Product added to cart.",
+                whatsapp: "WhatsApp", language: "Language"
+            }
+        };
+
+        let currentLanguage = localStorage.getItem("inspireLanguage") === "en" ? "en" : "ar";
+
+        function t(key) {
+            return translations[currentLanguage][key] ?? translations.ar[key] ?? key;
+        }
+
         const money = (value) => {
             const number = Number(value) || 0;
-            return `${number.toLocaleString("ar-EG")} ج.م`;
+            const locale = currentLanguage === "en" ? "en-EG" : "ar-EG";
+            return `${number.toLocaleString(locale)} ${t("currency")}`;
         };
+
+        function applyLanguage() {
+            document.documentElement.lang = t("langCode");
+            document.documentElement.dir = t("dir");
+            document.body.classList.toggle("lang-en", currentLanguage === "en");
+
+            document.querySelectorAll("[data-i18n]").forEach((el) => {
+                const key = el.dataset.i18n;
+                if (key === "vodafoneHint") el.innerHTML = t(key);
+                else el.textContent = t(key);
+            });
+
+            $("inspireMenu").querySelectorAll("a")[0].innerHTML = `<i class="fa-solid fa-house"></i> ${t("menuHome")}`;
+            $("inspireMenu").querySelectorAll("a")[1].innerHTML = `<i class="fa-solid fa-shirt"></i> ${t("products")}`;
+            $("inspireMenu").querySelectorAll("a")[2].innerHTML = `<i class="fa-solid fa-tag"></i> ${t("offers")}`;
+            $("cartButton").setAttribute("aria-label", t("cart"));
+            $("vodafoneCashSender").placeholder = currentLanguage === "en" ? "01xxxxxxxxx" : "01xxxxxxxxx";
+            $("orderCustomerPhone").placeholder = "01xxxxxxxxx";
+            $("chatbotInput").placeholder = t("chatPlaceholder");
+            $("chatbotToggleBtn").setAttribute("aria-label", t("chatbot"));
+            $("chatbotWindow").setAttribute("aria-label", t("chatbot"));
+            $("sendChatbotMsgBtn").setAttribute("aria-label", t("send"));
+
+            $("langArBtn").classList.toggle("active", currentLanguage === "ar");
+            $("langEnBtn").classList.toggle("active", currentLanguage === "en");
+
+            renderProducts();
+            updateCartUI();
+            const welcome = document.querySelector("#chatbotMessages .chat-message.bot");
+            if (welcome) welcome.textContent = t("chatWelcome");
+            if (selectedProduct) {
+                renderDetailGallery(getProductImages(selectedProduct));
+                renderDetailOptions();
+            }
+        }
+
+        function setLanguage(lang) {
+            if (!translations[lang]) return;
+            currentLanguage = lang;
+            localStorage.setItem("inspireLanguage", lang);
+            applyLanguage();
+        }
 
         function showModal(element) {
             if (!element) return;
@@ -949,12 +1052,35 @@
                 renderProducts();
             } catch (error) {
                 console.error("Supabase products error:", error);
-                container.innerHTML = `
-                    <div class="error-state">
-                        حصل خطأ أثناء تحميل المنتجات. تأكد من إعداد جدول products وRLS في Supabase.
-                    </div>
-                `;
+                container.innerHTML = `<div class="error-state">${currentLanguage === "en" ? "Could not load products. Check the products table and RLS settings in Supabase." : "حصل خطأ أثناء تحميل المنتجات. تأكد من إعداد جدول products وRLS في Supabase."}</div>`;
             }
+        }
+
+        function parseArrayField(value, fallback = []) {
+            if (Array.isArray(value)) return value.filter(Boolean);
+            if (typeof value === "string" && value.trim()) {
+                try {
+                    const parsed = JSON.parse(value);
+                    if (Array.isArray(parsed)) return parsed.filter(Boolean);
+                } catch (_) {
+                    return value.split(",").map(v => v.trim()).filter(Boolean);
+                }
+            }
+            return fallback;
+        }
+
+        function getProductImages(product) {
+            const images = parseArrayField(product.images, []);
+            if (images.length) return images;
+            return product.image ? [product.image] : ["https://via.placeholder.com/800x800?text=INSPIRE"];
+        }
+
+        function getProductSizes(product) {
+            return parseArrayField(product.sizes, ["S", "M", "L", "XL", "XXL"]);
+        }
+
+        function getProductColors(product) {
+            return parseArrayField(product.colors, ["أسود", "أبيض", "رمادي"]);
         }
 
         function renderProducts() {
@@ -964,7 +1090,7 @@
             if (!products.length) {
                 const empty = document.createElement("div");
                 empty.className = "empty-state";
-                empty.textContent = "لا توجد منتجات حالياً.";
+                empty.textContent = t("emptyProducts");
                 container.appendChild(empty);
                 return;
             }
@@ -972,18 +1098,20 @@
             products.forEach((product) => {
                 const card = document.createElement("article");
                 card.className = "product-card";
-                card.dataset.productId = String(product.id ?? "");
+                card.dataset.productId = String(product.id ?? product.name ?? "");
+                card.tabIndex = 0;
+                card.setAttribute("role", "button");
+                card.setAttribute("aria-label", `${t("details")}: ${product.name || t("product")}`);
 
                 const imageWrap = document.createElement("div");
                 imageWrap.className = "product-image";
 
                 const img = document.createElement("img");
-                img.src = product.image || "https://via.placeholder.com/600x600?text=INSPIRE";
+                const images = getProductImages(product);
+                img.src = images[0];
                 img.alt = product.name || "منتج INSPIRE";
                 img.loading = "lazy";
-                img.onerror = () => {
-                    img.src = "https://via.placeholder.com/600x600?text=INSPIRE";
-                };
+                img.onerror = () => { img.src = "https://via.placeholder.com/800x800?text=INSPIRE"; };
                 imageWrap.appendChild(img);
 
                 const info = document.createElement("div");
@@ -999,85 +1127,140 @@
                 const title = document.createElement("h3");
                 title.className = "product-title";
                 title.textContent = product.name || "منتج بدون اسم";
-                info.appendChild(title);
 
                 const price = document.createElement("div");
                 price.className = "price";
                 price.textContent = money(product.price);
-                info.appendChild(price);
 
-                const sizeSelector = document.createElement("div");
-                sizeSelector.className = "size-selector";
+                const hint = document.createElement("div");
+                hint.className = "product-hint";
+                hint.textContent = t("details");
 
-                const sizeLabel = document.createElement("label");
-                sizeLabel.textContent = "المقاس";
-                sizeSelector.appendChild(sizeLabel);
-
-                const sizeOptions = document.createElement("div");
-                sizeOptions.className = "size-options";
-
-                ["S", "M", "L", "XL", "XXL"].forEach((size, index) => {
-                    const button = document.createElement("button");
-                    button.type = "button";
-                    button.className = "size-btn";
-                    button.dataset.size = size;
-                    button.textContent = size;
-
-                    if (index === 1) button.classList.add("active");
-
-                    button.addEventListener("click", () => {
-                        sizeOptions.querySelectorAll(".size-btn")
-                            .forEach((btn) => btn.classList.remove("active"));
-                        button.classList.add("active");
-                    });
-
-                    sizeOptions.appendChild(button);
-                });
-
-                sizeSelector.appendChild(sizeOptions);
-                info.appendChild(sizeSelector);
-
-                const addButton = document.createElement("button");
-                addButton.type = "button";
-                addButton.className = "add-to-cart-btn";
-                addButton.innerHTML = '<i class="fa-solid fa-bag-shopping"></i> أضف للسلة';
-
-                addButton.addEventListener("click", () => {
-                    const selectedSize =
-                        sizeOptions.querySelector(".size-btn.active")?.dataset.size || "M";
-
-                    addToCart(product, selectedSize);
-                });
-
-                info.appendChild(addButton);
+                info.append(title, price, hint);
                 card.append(imageWrap, info);
+
+                const open = () => openProductDetails(product);
+                card.addEventListener("click", open);
+                card.addEventListener("keydown", (event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        open();
+                    }
+                });
+
                 container.appendChild(card);
             });
         }
 
-        /* ================= CART ================= */
-        function addToCart(product, size) {
-            const productId = product.id ?? product.name;
-            const existing = cart.find(
-                (item) => item.productId === productId && item.size === size
+        /* ================= PRODUCT DETAILS ================= */
+        let selectedProduct = null;
+        let selectedSize = "";
+        let selectedColor = "";
+        let selectedDetailImageIndex = 0;
+
+        function openProductDetails(product) {
+            selectedProduct = product;
+            selectedDetailImageIndex = 0;
+            selectedSize = getProductSizes(product)[0] || "";
+            selectedColor = getProductColors(product)[0] || "";
+
+            $("detailCategory").textContent = product.category || "";
+            $("detailProductName").textContent = product.name || "منتج";
+            $("detailProductPrice").textContent = money(product.price);
+            $("detailQuantity").value = "1";
+            setMessage($("detailMessage"), "");
+
+            renderDetailGallery(getProductImages(product));
+            renderDetailOptions();
+            showModal($("productDetailModal"));
+        }
+
+        function renderDetailGallery(images) {
+            const main = $("detailMainImage");
+            const thumbs = $("detailThumbnails");
+            thumbs.replaceChildren();
+            main.src = images[selectedDetailImageIndex] || images[0];
+            main.alt = selectedProduct?.name || t("product");
+
+            images.forEach((src, index) => {
+                const button = document.createElement("button");
+                button.type = "button";
+                button.className = "detail-thumb" + (index === selectedDetailImageIndex ? " active" : "");
+                const img = document.createElement("img");
+                img.src = src;
+                img.alt = `${selectedProduct?.name || t("product")} - ${currentLanguage === "en" ? "Image" : "صورة"} ${index + 1}`;
+                img.loading = "lazy";
+                button.appendChild(img);
+                button.addEventListener("click", () => {
+                    selectedDetailImageIndex = index;
+                    main.src = images[index];
+                    thumbs.querySelectorAll(".detail-thumb").forEach((el, i) => el.classList.toggle("active", i === index));
+                });
+                thumbs.appendChild(button);
+            });
+        }
+
+        function renderDetailOptions() {
+            const sizes = $("detailSizes");
+            const colors = $("detailColors");
+            sizes.replaceChildren();
+            colors.replaceChildren();
+
+            getProductSizes(selectedProduct).forEach((size) => {
+                const button = document.createElement("button");
+                button.type = "button";
+                button.className = "detail-option" + (String(size) === String(selectedSize) ? " active" : "");
+                button.textContent = size;
+                button.addEventListener("click", () => { selectedSize = size; renderDetailOptions(); });
+                sizes.appendChild(button);
+            });
+
+            getProductColors(selectedProduct).forEach((color) => {
+                const button = document.createElement("button");
+                button.type = "button";
+                button.className = "detail-option color-swatch" + (String(color) === String(selectedColor) ? " active" : "");
+                button.textContent = color;
+                button.addEventListener("click", () => { selectedColor = color; renderDetailOptions(); });
+                colors.appendChild(button);
+            });
+        }
+
+        function normalizeQuantity(value) {
+            const quantity = Math.max(1, Math.min(20, parseInt(value, 10) || 1));
+            $("detailQuantity").value = String(quantity);
+            return quantity;
+        }
+
+        function addSelectedProductToCart() {
+            if (!selectedProduct) return;
+
+            const quantity = normalizeQuantity($("detailQuantity").value);
+            const productId = selectedProduct.id ?? selectedProduct.name;
+            const existing = cart.find(item =>
+                item.productId === productId &&
+                item.size === selectedSize &&
+                item.color === selectedColor
             );
 
             if (existing) {
-                existing.quantity += 1;
+                existing.quantity = Math.min(20, existing.quantity + quantity);
             } else {
                 cart.push({
                     productId,
-                    name: product.name || "منتج",
-                    price: Number(product.price) || 0,
-                    size,
-                    quantity: 1
+                    name: selectedProduct.name || "منتج",
+                    price: Number(selectedProduct.price) || 0,
+                    size: selectedSize,
+                    color: selectedColor,
+                    quantity
                 });
             }
 
             updateCartUI();
-            alert("تم إضافة المنتج إلى السلة.");
+            hideModal($("productDetailModal"));
+            alert(t("added"));
         }
 
+        /* ================= CART ================= */
         function removeFromCart(index) {
             cart.splice(index, 1);
             updateCartUI();
@@ -1096,7 +1279,7 @@
             if (!cart.length) {
                 const empty = document.createElement("div");
                 empty.className = "empty-state";
-                empty.textContent = "السلة فارغة.";
+                empty.textContent = t("emptyCart");
                 container.appendChild(empty);
                 $("checkoutBtn").disabled = true;
                 return;
@@ -1117,7 +1300,7 @@
 
                 const meta = document.createElement("div");
                 meta.className = "cart-item-meta";
-                meta.textContent = `المقاس: ${item.size} • الكمية: ${item.quantity} • ${money(item.price * item.quantity)}`;
+                meta.textContent = `${t("size")}: ${item.size} • ${t("color")}: ${item.color || "-"} • ${currentLanguage === "en" ? "Qty" : "الكمية"}: ${item.quantity} • ${money(item.price * item.quantity)}`;
 
                 info.append(name, meta);
 
@@ -1136,7 +1319,7 @@
         /* ================= ORDER ================= */
         function openCheckout() {
             if (!cart.length) {
-                alert("السلة فارغة، أضف منتجاً أولاً.");
+                alert(t("cartEmptyAlert"));
                 return;
             }
 
@@ -1157,24 +1340,29 @@
             event.preventDefault();
 
             if (!cart.length) {
-                setMessage($("orderMessage"), "السلة فارغة.", "error");
+                setMessage($("orderMessage"), t("emptyCart"), "error");
                 return;
             }
 
             const customerName = $("orderCustomerName").value.trim();
             const customerPhone = normalizePhone($("orderCustomerPhone").value.trim());
             const customerAddress = $("orderCustomerAddress").value.trim();
-            const customerSize = $("orderCustomerSize").value;
+            const vodafoneCashSender = normalizePhone($("vodafoneCashSender").value.trim());
 
-            if (!customerName || !customerPhone || !customerAddress || !customerSize) {
-                setMessage($("orderMessage"), "من فضلك املأ جميع البيانات.", "error");
+            if (!customerName || !customerPhone || !customerAddress) {
+                setMessage($("orderMessage"), t("fillData"), "error");
+                return;
+            }
+
+            if (vodafoneCashSender && !isValidEgyptianPhone(vodafoneCashSender)) {
+                setMessage($("orderMessage"), t("invalidSender"), "error");
                 return;
             }
 
             if (!isValidEgyptianPhone(customerPhone)) {
                 setMessage(
                     $("orderMessage"),
-                    "اكتب رقم هاتف مصري صحيح مكون من 11 رقم ويبدأ بـ 010 أو 011 أو 012 أو 015.",
+                    t("invalidPhone"),
                     "error"
                 );
                 return;
@@ -1182,7 +1370,7 @@
 
             const confirmButton = $("confirmOrderBtn");
             confirmButton.disabled = true;
-            confirmButton.textContent = "جاري إرسال الطلب...";
+            confirmButton.textContent = t("orderSending");
             setMessage($("orderMessage"), "");
 
             const totalPrice = cart.reduce(
@@ -1196,6 +1384,7 @@
                 name: item.name,
                 price: item.price,
                 size: item.size,
+                color: item.color,
                 quantity: item.quantity
             }));
 
@@ -1205,7 +1394,10 @@
                 customer_phone: customerPhone,
                 products: JSON.stringify(productsPayload),
                 total_price: totalPrice,
-                customer_size: customerSize
+                customer_size: productsPayload.map(item => `${item.size} x${item.quantity}`).join(" | "),
+                payment_method: "Vodafone Cash",
+                payment_phone: vodafoneCashSender || null,
+                payment_wallet: "01533395470"
             };
 
             try {
@@ -1217,7 +1409,7 @@
 
                 setMessage(
                     $("orderMessage"),
-                    "تم تأكيد طلبك بنجاح! سنتواصل معك لتأكيد التوصيل.",
+                    t("orderSuccess"),
                     "success"
                 );
 
@@ -1229,18 +1421,18 @@
                     hideModal($("checkoutModal"));
                     setMessage($("orderMessage"), "");
                     confirmButton.disabled = false;
-                    confirmButton.textContent = "تأكيد الطلب";
+                    confirmButton.textContent = t("confirmOrder");
                 }, 2500);
 
             } catch (error) {
                 console.error("Supabase order error:", error);
                 setMessage(
                     $("orderMessage"),
-                    "لم يتم إرسال الطلب. تأكد من إعداد جدول orders وRLS في Supabase.",
+                    t("orderError"),
                     "error"
                 );
                 confirmButton.disabled = false;
-                confirmButton.textContent = "تأكيد الطلب";
+                confirmButton.textContent = t("confirmOrder");
             }
         }
 
@@ -1251,7 +1443,7 @@
             const email = $("loginEmail").value.trim();
             const password = $("loginPassword").value;
 
-            setMessage($("loginMessage"), "جاري تسجيل الدخول...");
+            setMessage($("loginMessage"), t("authLoginLoading"));
 
             const { error } = await supabaseClient.auth.signInWithPassword({
                 email,
@@ -1263,7 +1455,7 @@
                 return;
             }
 
-            setMessage($("loginMessage"), "تم تسجيل الدخول بنجاح.", "success");
+            setMessage($("loginMessage"), t("authLoginSuccess"), "success");
             setTimeout(() => hideModal($("authModal")), 1000);
         }
 
@@ -1274,7 +1466,7 @@
             const email = $("regEmail").value.trim();
             const password = $("regPassword").value;
 
-            setMessage($("registerMessage"), "جاري إنشاء الحساب...");
+            setMessage($("registerMessage"), t("authRegisterLoading"));
 
             const { error } = await supabaseClient.auth.signUp({
                 email,
@@ -1291,7 +1483,7 @@
 
             setMessage(
                 $("registerMessage"),
-                "تم إنشاء الحساب. لو تأكيد البريد الإلكتروني مفعل، راجع بريدك.",
+                t("authRegisterSuccess"),
                 "success"
             );
         }
@@ -1336,6 +1528,12 @@
             $("closeCheckoutBtn").addEventListener("click", () => hideModal($("checkoutModal")));
             $("checkoutForm").addEventListener("submit", submitOrder);
 
+            $("closeProductDetailBtn").addEventListener("click", () => hideModal($("productDetailModal")));
+            $("detailAddToCartBtn").addEventListener("click", addSelectedProductToCart);
+            $("quantityMinus").addEventListener("click", () => normalizeQuantity(Number($("detailQuantity").value) - 1));
+            $("quantityPlus").addEventListener("click", () => normalizeQuantity(Number($("detailQuantity").value) + 1));
+            $("detailQuantity").addEventListener("input", () => normalizeQuantity($("detailQuantity").value));
+
             $("accountBtn").addEventListener("click", () => showModal($("authModal")));
             $("closeAuthBtn").addEventListener("click", () => hideModal($("authModal")));
 
@@ -1356,7 +1554,7 @@
             $("loginForm").addEventListener("submit", handleLogin);
             $("registerForm").addEventListener("submit", handleRegister);
 
-            [$("cartModal"), $("checkoutModal"), $("authModal")].forEach((modal) => {
+            [$("cartModal"), $("checkoutModal"), $("authModal"), $("productDetailModal")].forEach((modal) => {
                 modal.addEventListener("click", (event) => {
                     if (event.target === modal) hideModal(modal);
                 });
@@ -1367,12 +1565,17 @@
                     hideModal($("cartModal"));
                     hideModal($("checkoutModal"));
                     hideModal($("authModal"));
+                    hideModal($("productDetailModal"));
                     $("chatbotWindow").classList.remove("show");
                 }
             });
 
+            $("langArBtn").addEventListener("click", () => setLanguage("ar"));
+            $("langEnBtn").addEventListener("click", () => setLanguage("en"));
+
             setupLogoDrag();
             setupChatbot();
+            applyLanguage();
         }
 
         /* ================= 3D LOGO ================= */
@@ -1423,6 +1626,8 @@
 
         /* ================= CHATBOT ================= */
         function setupChatbot() {
+            const welcome = document.querySelector("#chatbotMessages .chat-message.bot");
+            if (welcome) welcome.textContent = t("chatWelcome");
             const toggle = $("chatbotToggleBtn");
             const close = $("closeChatbotBtn");
             const windowEl = $("chatbotWindow");
@@ -1442,22 +1647,22 @@
                 const text = query.toLowerCase();
 
                 if (text.includes("مقاس") || text.includes("size")) {
-                    return "تقدر تختار S أو M أو L أو XL أو XXL من كارت المنتج.";
+                    return currentLanguage === "en" ? "You can choose S, M, L, XL, or XXL from the product details." : "تقدر تختار S أو M أو L أو XL أو XXL من تفاصيل المنتج.";
                 }
 
-                if (text.includes("توصيل") || text.includes("عنوان")) {
-                    return "اكتب عنوان التوصيل بالتفصيل عند إتمام الطلب، وسنتواصل معك لتأكيده.";
+                if (text.includes("توصيل") || text.includes("عنوان") || text.includes("delivery") || text.includes("address")) {
+                    return currentLanguage === "en" ? "Enter the full delivery address at checkout and we will contact you to confirm it." : "اكتب عنوان التوصيل بالتفصيل عند إتمام الطلب، وسنتواصل معك لتأكيده.";
                 }
 
-                if (text.includes("سعر") || text.includes("منتج")) {
-                    return "أسعار المنتجات ظاهرة مباشرة تحت كل منتج في المتجر.";
+                if (text.includes("سعر") || text.includes("منتج") || text.includes("price") || text.includes("product")) {
+                    return currentLanguage === "en" ? "Product prices are shown on each product card and details page." : "أسعار المنتجات ظاهرة على كارت المنتج وصفحة التفاصيل.";
                 }
 
                 if (text.includes("واتساب") || text.includes("whatsapp")) {
-                    return "تقدر تتواصل معنا على واتساب من الأيقونة الموجودة أعلى الموقع.";
+                    return currentLanguage === "en" ? "You can contact us on WhatsApp using the icon at the top of the site." : "تقدر تتواصل معنا على واتساب من الأيقونة الموجودة أعلى الموقع.";
                 }
 
-                return "شكراً لتواصلك معنا! لو سؤالك عن المقاس أو السعر أو التوصيل، اكتب الكلمة دي وأنا هساعدك.";
+                return currentLanguage === "en" ? "Thanks for contacting us! Ask me about size, price, delivery, or products." : "شكراً لتواصلك معنا! اسألني عن المقاس أو السعر أو التوصيل أو المنتجات.";
             }
 
             toggle.addEventListener("click", () => {
