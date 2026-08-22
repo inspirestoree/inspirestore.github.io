@@ -272,6 +272,61 @@
             background: #fff;
             color: #111;
             font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .account-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #e9e9e9;
+            display: inline-block;
+            flex: 0 0 28px;
+        }
+
+        .account-avatar-fallback {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: inline-grid;
+            place-items: center;
+            background: #111;
+            color: #fff;
+            font-size: 12px;
+            flex: 0 0 28px;
+        }
+
+        .account-profile-head {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .account-profile-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #eee;
+            border: 1px solid #ddd;
+            flex: 0 0 64px;
+        }
+
+        .account-profile-avatar-fallback {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: inline-grid;
+            place-items: center;
+            background: #111;
+            color: #fff;
+            font-size: 24px;
+            font-weight: 800;
+            flex: 0 0 64px;
         }
 
         /* ================= HERO ================= */
@@ -499,6 +554,39 @@
         }
 
         .auth-form.active { display: flex; }
+
+        .google-btn {
+            width: 100%; border: 1px solid #ddd; border-radius: 8px; padding: 11px 12px;
+            background: #fff; color: #222; font-weight: 700; display: flex;
+            align-items: center; justify-content: center; gap: 9px;
+        }
+        .google-btn:hover { background: #f7f7f7; }
+        .auth-divider { display: flex; align-items: center; gap: 10px; margin: 14px 0; color: #999; font-size: 12px; }
+        .auth-divider::before, .auth-divider::after { content: ""; flex: 1; height: 1px; background: #eee; }
+        .account-panel { display: none; }
+        .account-panel.active { display: block; }
+        .account-header { padding-bottom: 15px; border-bottom: 1px solid var(--border); margin-bottom: 15px; }
+        .account-name { font-size: 20px; font-weight: 900; }
+        .account-email { color: var(--muted); font-size: 13px; margin-top: 2px; word-break: break-word; }
+        .profile-form { display: flex; flex-direction: column; gap: 10px; margin: 16px 0 18px; padding: 14px; background: #fafafa; border: 1px solid var(--border); border-radius: 10px; }
+        .profile-form h3 { font-size: 16px; margin-bottom: 2px; }
+        .profile-form .submit-btn { margin-top: 2px; }
+        .password-section { margin-top: 6px; padding-top: 14px; border-top: 1px solid #e9e9e9; }
+        .account-actions { display: flex; gap: 8px; margin-top: 14px; }
+        .account-actions button { flex: 1; border: 1px solid #ddd; border-radius: 8px; padding: 10px; background: #fff; font-weight: 700; }
+        .account-actions .logout-btn { background: #111; color: #fff; border-color: #111; }
+        .orders-title { margin-bottom: 10px; font-size: 17px; }
+        .orders-list { display: flex; flex-direction: column; gap: 10px; }
+        .order-card { border: 1px solid var(--border); border-radius: 10px; padding: 12px; background: #fff; }
+        .order-top { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+        .order-date { font-size: 12px; color: var(--muted); }
+        .order-status { padding: 4px 8px; border-radius: 999px; background: #f1f1f1; font-size: 11px; font-weight: 800; }
+        .order-status.success { background: #e8f7ee; color: var(--success); }
+        .order-status.danger { background: #fdebec; color: var(--danger); }
+        .order-items { margin-top: 8px; font-size: 12px; color: #555; white-space: pre-wrap; }
+        .order-total { margin-top: 8px; font-weight: 900; }
+        .account-loading, .account-empty { padding: 18px 8px; text-align: center; color: #777; }
+        .refresh-orders { margin-top: 10px; width: 100%; border: 0; border-radius: 8px; padding: 10px; background: #f2f2f2; font-weight: 700; }
 
         /* ================= CHATBOT ================= */
         #chatbotToggleBtn {
@@ -811,51 +899,114 @@
             </div>
         </div>
 
-        <!-- ================= AUTH ================= -->
+        <!-- ================= AUTH / ACCOUNT ================= -->
         <div class="auth-modal-overlay" id="authModal" aria-hidden="true">
             <div class="auth-box" role="dialog" aria-modal="true" aria-labelledby="authTitle">
                 <button class="close-btn" id="closeAuthBtn" type="button" aria-label="إغلاق">&times;</button>
                 <h2 id="authTitle" data-i18n="account">حسابي</h2>
 
-                <div class="auth-tabs">
-                    <button class="tab-btn active" id="loginTabBtn" type="button" data-i18n="login">تسجيل الدخول</button>
-                    <button class="tab-btn" id="registerTabBtn" type="button" data-i18n="register">إنشاء حساب</button>
+                <div id="authFormsPanel">
+                    <div class="auth-tabs">
+                        <button class="tab-btn active" id="loginTabBtn" type="button" data-i18n="login">تسجيل الدخول</button>
+                        <button class="tab-btn" id="registerTabBtn" type="button" data-i18n="register">إنشاء حساب</button>
+                    </div>
+
+                    <button type="button" class="google-btn" id="googleLoginBtn">
+                        <i class="fa-brands fa-google"></i>
+                        <span data-i18n="continueWithGoogle">المتابعة باستخدام Google</span>
+                    </button>
+
+                    <div class="auth-divider"><span data-i18n="or">أو</span></div>
+
+                    <form id="loginForm" class="auth-form active">
+                        <div class="input-group">
+                            <label for="loginEmail" data-i18n="email">البريد الإلكتروني</label>
+                            <input type="email" id="loginEmail" autocomplete="email" required>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="loginPassword" data-i18n="password">كلمة المرور</label>
+                            <input type="password" id="loginPassword" autocomplete="current-password" minlength="6" required>
+                        </div>
+
+                        <button type="submit" class="submit-btn" data-i18n="login">دخول</button>
+                        <p id="loginMessage" class="message" aria-live="polite"></p>
+                    </form>
+
+                    <form id="registerForm" class="auth-form">
+                        <div class="input-group">
+                            <label for="regName" data-i18n="fullName">الاسم بالكامل</label>
+                            <input type="text" id="regName" maxlength="100" required>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="regEmail" data-i18n="email">البريد الإلكتروني</label>
+                            <input type="email" id="regEmail" autocomplete="email" required>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="regPassword" data-i18n="password">كلمة المرور</label>
+                            <input type="password" id="regPassword" autocomplete="new-password" minlength="6" required>
+                        </div>
+
+                        <button type="submit" class="submit-btn" data-i18n="createAccount">إنشاء حساب</button>
+                        <p id="registerMessage" class="message" aria-live="polite"></p>
+                    </form>
                 </div>
 
-                <form id="loginForm" class="auth-form active">
-                    <div class="input-group">
-                        <label for="loginEmail" data-i18n="email">البريد الإلكتروني</label>
-                        <input type="email" id="loginEmail" autocomplete="email" required>
+                <div id="accountPanel" class="account-panel">
+                    <div class="account-header">
+                        <div class="account-profile-head">
+                            <img id="accountProfileAvatar" class="account-profile-avatar" src="" alt="Profile">
+                            <div>
+                                <div id="accountName" class="account-name">-</div>
+                                <div id="accountEmail" class="account-email">-</div>
+                            </div>
+                        </div>
+                        <div class="account-actions">
+                            <button type="button" id="refreshOrdersBtn"><i class="fa-solid fa-rotate"></i> <span data-i18n="refreshOrders">تحديث</span></button>
+                            <button type="button" id="logoutBtn" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> <span data-i18n="logout">تسجيل الخروج</span></button>
+                        </div>
                     </div>
 
-                    <div class="input-group">
-                        <label for="loginPassword" data-i18n="password">كلمة المرور</label>
-                        <input type="password" id="loginPassword" autocomplete="current-password" minlength="6" required>
+                    <form id="profileForm" class="profile-form">
+                        <h3 data-i18n="editProfile">تعديل البيانات</h3>
+
+                        <div class="input-group">
+                            <label for="profileName" data-i18n="fullName">الاسم بالكامل</label>
+                            <input type="text" id="profileName" maxlength="100" autocomplete="name" required>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="profilePhone" data-i18n="phone">رقم الهاتف</label>
+                            <input type="tel" id="profilePhone" inputmode="numeric" maxlength="11" placeholder="01xxxxxxxxx" autocomplete="tel">
+                        </div>
+
+                        <button type="submit" class="submit-btn" id="saveProfileBtn">
+                            <i class="fa-solid fa-floppy-disk"></i> <span data-i18n="saveChanges">حفظ التغييرات</span>
+                        </button>
+
+                        <div class="password-section">
+                            <div class="input-group">
+                                <label for="profilePassword" data-i18n="newPassword">كلمة المرور الجديدة</label>
+                                <input type="password" id="profilePassword" minlength="6" autocomplete="new-password">
+                            </div>
+
+                            <div class="input-group" style="margin-top:10px;">
+                                <label for="profilePasswordConfirm" data-i18n="confirmPassword">تأكيد كلمة المرور</label>
+                                <input type="password" id="profilePasswordConfirm" minlength="6" autocomplete="new-password">
+                            </div>
+                        </div>
+                    </form>
+
+                    <p id="profileMessage" class="message" aria-live="polite"></p>
+
+                    <h3 class="orders-title" data-i18n="myOrders">طلباتي</h3>
+                    <div id="ordersList" class="orders-list">
+                        <div class="account-loading" data-i18n="loadingOrders">جاري تحميل الطلبات...</div>
                     </div>
-
-                    <button type="submit" class="submit-btn" data-i18n="login">دخول</button>
-                    <p id="loginMessage" class="message" aria-live="polite"></p>
-                </form>
-
-                <form id="registerForm" class="auth-form">
-                    <div class="input-group">
-                        <label for="regName" data-i18n="fullName">الاسم بالكامل</label>
-                        <input type="text" id="regName" maxlength="100" required>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="regEmail" data-i18n="email">البريد الإلكتروني</label>
-                        <input type="email" id="regEmail" autocomplete="email" required>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="regPassword" data-i18n="password">كلمة المرور</label>
-                        <input type="password" id="regPassword" autocomplete="new-password" minlength="6" required>
-                    </div>
-
-                    <button type="submit" class="submit-btn">إنشاء الحساب</button>
-                    <p id="registerMessage" class="message" aria-live="polite"></p>
-                </form>
+                    <p id="accountMessage" class="message" aria-live="polite"></p>
+                </div>
             </div>
         </div>
 
@@ -907,6 +1058,7 @@
 
         let products = [];
         let cart = [];
+        let currentUser = null;
 
         const $ = (id) => document.getElementById(id);
 
@@ -925,7 +1077,7 @@
                 deliveryData: "بيانات التوصيل", fullName: "الاسم بالكامل", phone: "رقم الهاتف",
                 address: "عنوان التوصيل", paymentMethod: "طريقة الدفع", senderPhone: "رقم الهاتف المحوِّل منه (اختياري)",
                 vodafoneHint: "حوّل المبلغ إلى <strong>01533395470</strong> عبر Vodafone Cash، ثم اكتب رقم الهاتف الذي تم التحويل منه.",
-                confirmOrder: "تأكيد الطلب", account: "حسابي", login: "تسجيل الدخول", register: "إنشاء حساب",
+                confirmOrder: "تأكيد الطلب", account: "حسابي", login: "تسجيل الدخول", register: "إنشاء حساب", continueWithGoogle: "المتابعة باستخدام Google", or: "أو", editProfile: "تعديل البيانات", saveChanges: "حفظ التغييرات", newPassword: "كلمة المرور الجديدة", confirmPassword: "تأكيد كلمة المرور", passwordUpdated: "تم تحديث كلمة المرور بنجاح.", profileUpdated: "تم تحديث بيانات الحساب بنجاح.", passwordMismatch: "كلمتا المرور غير متطابقتين.", weakPassword: "كلمة المرور يجب أن تكون 6 أحرف على الأقل.", invalidProfilePhone: "اكتب رقم هاتف مصري صحيح من 11 رقم أو اتركه فارغًا.", logout: "تسجيل الخروج", myOrders: "طلباتي", refreshOrders: "تحديث", loadingOrders: "جاري تحميل الطلبات...", noOrders: "لا توجد طلبات مرتبطة بحسابك حتى الآن.", orderDate: "تاريخ الطلب", orderStatus: "الحالة", orderTotal: "الإجمالي", orderItems: "المنتجات", statusPending: "قيد المراجعة", statusProcessing: "قيد التجهيز", statusShipped: "تم الشحن", statusDelivered: "تم التسليم", statusCancelled: "ملغي",
                 email: "البريد الإلكتروني", password: "كلمة المرور", createAccount: "إنشاء حساب",
                 chatbot: "المساعد الذكي - INSPIRE", chatWelcome: "أهلاً بك! أنا مساعد INSPIRE الذكي. كيف يمكنني مساعدتك؟",
                 chatPlaceholder: "اكتب استفسارك هنا...", send: "إرسال", footer: "© 2026 INSPIRE. جميع الحقوق محفوظة.",
@@ -951,7 +1103,7 @@
                 deliveryData: "Delivery Details", fullName: "Full Name", phone: "Phone Number",
                 address: "Delivery Address", paymentMethod: "Payment Method", senderPhone: "Sender Phone Number (optional)",
                 vodafoneHint: "Transfer the amount to <strong>01533395470</strong> via Vodafone Cash, then enter the phone number used for the transfer.",
-                confirmOrder: "Confirm Order", account: "Account", login: "Log In", register: "Create Account",
+                confirmOrder: "Confirm Order", account: "Account", login: "Log In", register: "Create Account", continueWithGoogle: "Continue with Google", or: "or", editProfile: "Edit Profile", saveChanges: "Save Changes", newPassword: "New Password", confirmPassword: "Confirm Password", passwordUpdated: "Password updated successfully.", profileUpdated: "Profile updated successfully.", passwordMismatch: "Passwords do not match.", weakPassword: "Password must be at least 6 characters.", invalidProfilePhone: "Enter a valid 11-digit Egyptian phone number or leave it empty.", logout: "Log Out", myOrders: "My Orders", refreshOrders: "Refresh", loadingOrders: "Loading orders...", noOrders: "No orders are linked to your account yet.", orderDate: "Order date", orderStatus: "Status", orderTotal: "Total", orderItems: "Items", statusPending: "Pending", statusProcessing: "Processing", statusShipped: "Shipped", statusDelivered: "Delivered", statusCancelled: "Cancelled",
                 email: "Email", password: "Password", createAccount: "Create Account",
                 chatbot: "INSPIRE Smart Assistant", chatWelcome: "Welcome! I’m the INSPIRE smart assistant. How can I help you?",
                 chatPlaceholder: "Type your question here...", send: "Send", footer: "© 2026 INSPIRE. All rights reserved.",
@@ -1010,6 +1162,7 @@
                 renderDetailGallery(getProductImages(selectedProduct));
                 renderDetailOptions();
             }
+            if (currentUser) updateAccountUI();
         }
 
         function setLanguage(lang) {
@@ -1397,7 +1550,8 @@
                 customer_size: productsPayload.map(item => `${item.size} x${item.quantity}`).join(" | "),
                 payment_method: "Vodafone Cash",
                 payment_phone: vodafoneCashSender || null,
-                payment_wallet: "01533395470"
+                payment_wallet: "01533395470",
+                user_id: currentUser?.id || null,
             };
 
             try {
@@ -1436,44 +1590,345 @@
             }
         }
 
-        /* ================= AUTH ================= */
-        async function handleLogin(event) {
+        /* ================= AUTH / ACCOUNT ================= */
+        function getStatusLabel(status) {
+            const key = String(status || "pending").toLowerCase();
+            const map = {
+                pending: "statusPending",
+                processing: "statusProcessing",
+                shipped: "statusShipped",
+                delivered: "statusDelivered",
+                cancelled: "statusCancelled"
+            };
+            return t(map[key] || "statusPending");
+        }
+
+        async function refreshCurrentUser() {
+            const { data } = await supabaseClient.auth.getUser();
+            currentUser = data?.user || null;
+            updateAccountUI();
+            return currentUser;
+        }
+
+        function getCurrentUserName() {
+            return (
+                currentUser?.user_metadata?.full_name ||
+                currentUser?.user_metadata?.name ||
+                currentUser?.email ||
+                "INSPIRE"
+            );
+        }
+
+        function getCurrentUserAvatar() {
+            return (
+                currentUser?.user_metadata?.avatar_url ||
+                currentUser?.user_metadata?.picture ||
+                currentUser?.user_metadata?.photo_url ||
+                ""
+            );
+        }
+
+        function getInitials(name) {
+            const clean = String(name || "INSPIRE").trim();
+            if (!clean) return "I";
+            const parts = clean.split(/\s+/).filter(Boolean);
+            if (parts.length === 1) return parts[0].slice(0, 1).toUpperCase();
+            return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+        }
+
+        function setAvatarElement(element, avatarUrl, name, fallbackClass = "") {
+            if (!element) return;
+
+            if (avatarUrl) {
+                element.outerHTML = `<img id="${element.id}" class="${element.className}" src="${String(avatarUrl).replace(/"/g, "&quot;")}" alt="${String(name).replace(/"/g, "&quot;")}">`;
+                const img = $(element.id);
+                img.onerror = () => {
+                    img.outerHTML = `<span id="${element.id}" class="${fallbackClass}">${getInitials(name)}</span>`;
+                };
+                return;
+            }
+
+            element.outerHTML = `<span id="${element.id}" class="${fallbackClass}">${getInitials(name)}</span>`;
+        }
+
+        function updateAccountUI() {
+            const authForms = $("authFormsPanel");
+            const accountPanel = $("accountPanel");
+            const accountBtn = $("accountBtn");
+
+            if (currentUser) {
+                authForms.classList.add("hidden");
+                accountPanel.classList.add("active");
+
+                const name = getCurrentUserName();
+                const email = currentUser.email || "";
+                const avatarUrl = getCurrentUserAvatar();
+
+                $("accountName").textContent = name;
+                $("accountEmail").textContent = email;
+
+                accountBtn.innerHTML = "";
+                const navAvatar = document.createElement(avatarUrl ? "img" : "span");
+                navAvatar.id = "accountNavAvatar";
+                navAvatar.className = avatarUrl ? "account-avatar" : "account-avatar-fallback";
+                navAvatar.alt = name;
+                if (avatarUrl) {
+                    navAvatar.src = avatarUrl;
+                    navAvatar.onerror = () => {
+                        const fallback = document.createElement("span");
+                        fallback.id = "accountNavAvatar";
+                        fallback.className = "account-avatar-fallback";
+                        fallback.textContent = getInitials(name);
+                        navAvatar.replaceWith(fallback);
+                    };
+                } else {
+                    navAvatar.textContent = getInitials(name);
+                }
+
+                const label = document.createElement("span");
+                label.textContent = currentLanguage === "en" ? "My Account" : "حسابي";
+                accountBtn.append(navAvatar, label);
+
+                const profileAvatar = $("accountProfileAvatar");
+                if (profileAvatar) {
+                    if (avatarUrl) {
+                        profileAvatar.src = avatarUrl;
+                        profileAvatar.onerror = () => {
+                            profileAvatar.replaceWith(
+                                Object.assign(document.createElement("span"), {
+                                    id: "accountProfileAvatar",
+                                    className: "account-profile-avatar-fallback",
+                                    textContent: getInitials(name)
+                                })
+                            );
+                        };
+                    } else {
+                        profileAvatar.replaceWith(
+                            Object.assign(document.createElement("span"), {
+                                id: "accountProfileAvatar",
+                                className: "account-profile-avatar-fallback",
+                                textContent: getInitials(name)
+                            })
+                        );
+                    }
+                }
+
+                populateProfileForm();
+                loadMyOrders();
+            } else {
+                authForms.classList.remove("hidden");
+                accountPanel.classList.remove("active");
+                accountBtn.innerHTML = `<i class="fa-solid fa-user"></i> ${t("account")}`;
+            }
+        }
+
+        function formatOrderDate(value) {
+            if (!value) return "-";
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) return String(value);
+            return date.toLocaleString(currentLanguage === "en" ? "en-EG" : "ar-EG", {
+                year: "numeric", month: "long", day: "numeric", hour: "2-digit", minute: "2-digit"
+            });
+        }
+
+        function parseOrderProducts(value) {
+            if (Array.isArray(value)) return value;
+            if (typeof value !== "string") return [];
+            try {
+                const parsed = JSON.parse(value);
+                return Array.isArray(parsed) ? parsed : [];
+            } catch (_) {
+                return [];
+            }
+        }
+
+        async function loadMyOrders() {
+            const list = $("ordersList");
+            if (!currentUser) return;
+
+            list.innerHTML = `<div class="account-loading">${t("loadingOrders")}</div>`;
+
+            const { data, error } = await supabaseClient
+                .from("orders")
+                .select("*")
+                .eq("user_id", currentUser.id)
+                .order("created_at", { ascending: false });
+
+            if (error) {
+                console.error("Supabase orders error:", error);
+                list.innerHTML = `<div class="account-empty">${currentLanguage === "en" ? "Could not load your orders. Check the orders.user_id column and RLS policies." : "مش قادر أحمل طلباتك. تأكد من وجود عمود user_id وسياسات RLS في جدول orders."}</div>`;
+                return;
+            }
+
+            if (!data?.length) {
+                list.innerHTML = `<div class="account-empty">${t("noOrders")}</div>`;
+                return;
+            }
+
+            list.replaceChildren();
+            data.forEach((order) => {
+                const status = order.status || "pending";
+                const statusClass = status === "delivered" ? "success" : status === "cancelled" ? "danger" : "";
+                const productsList = parseOrderProducts(order.products);
+                const itemsText = productsList.length
+                    ? productsList.map(item => `${item.name || t("product")} — ${t("quantity")}: ${item.quantity || 1}${item.size ? ` — ${t("size")}: ${item.size}` : ""}${item.color ? ` — ${t("color")}: ${item.color}` : ""}`).join("\n")
+                    : "-";
+
+                const card = document.createElement("div");
+                card.className = "order-card";
+                card.innerHTML = `
+                    <div class="order-top">
+                        <strong>#${String(order.id).slice(-8)}</strong>
+                        <span class="order-status ${statusClass}">${getStatusLabel(status)}</span>
+                    </div>
+                    <div class="order-date">${t("orderDate")}: ${formatOrderDate(order.created_at)}</div>
+                    <div class="order-items"><strong>${t("orderItems")}:</strong>\n${itemsText}</div>
+                    <div class="order-total">${t("orderTotal")}: ${money(order.total_price)}</div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function populateProfileForm() {
+            if (!currentUser) return;
+
+            const name =
+                currentUser.user_metadata?.full_name ||
+                currentUser.user_metadata?.name ||
+                "";
+
+            const phone =
+                currentUser.user_metadata?.phone ||
+                "";
+
+            $("profileName").value = name;
+            $("profilePhone").value = phone;
+            $("profilePassword").value = "";
+            $("profilePasswordConfirm").value = "";
+            setMessage($("profileMessage"), "");
+        }
+
+        async function saveProfile(event) {
             event.preventDefault();
 
-            const email = $("loginEmail").value.trim();
-            const password = $("loginPassword").value;
+            if (!currentUser) return;
 
-            setMessage($("loginMessage"), t("authLoginLoading"));
+            const name = $("profileName").value.trim();
+            const phone = normalizePhone($("profilePhone").value.trim());
+            const password = $("profilePassword").value;
+            const passwordConfirm = $("profilePasswordConfirm").value;
 
-            const { error } = await supabaseClient.auth.signInWithPassword({
-                email,
-                password
+            if (!name) {
+                setMessage($("profileMessage"), t("fillData"), "error");
+                return;
+            }
+
+            if (phone && !isValidEgyptianPhone(phone)) {
+                setMessage($("profileMessage"), t("invalidProfilePhone"), "error");
+                return;
+            }
+
+            if (password || passwordConfirm) {
+                if (password.length < 6) {
+                    setMessage($("profileMessage"), t("weakPassword"), "error");
+                    return;
+                }
+
+                if (password !== passwordConfirm) {
+                    setMessage($("profileMessage"), t("passwordMismatch"), "error");
+                    return;
+                }
+            }
+
+            const button = $("saveProfileBtn");
+            button.disabled = true;
+
+            try {
+                const updates = {
+                    data: {
+                        ...(currentUser.user_metadata || {}),
+                        full_name: name,
+                        phone: phone || null
+                    }
+                };
+
+                if (password) {
+                    updates.password = password;
+                }
+
+                const { data, error } =
+                    await supabaseClient.auth.updateUser(updates);
+
+                if (error) throw error;
+
+                currentUser = data.user || currentUser;
+                updateAccountUI();
+                populateProfileForm();
+
+                setMessage(
+                    $("profileMessage"),
+                    password ? t("passwordUpdated") + " " + t("profileUpdated") : t("profileUpdated"),
+                    "success"
+                );
+
+                // استخدم البيانات المحدثة تلقائيًا في نموذج الطلب.
+                $("orderCustomerName").value = name;
+                if (phone) $("orderCustomerPhone").value = phone;
+
+            } catch (error) {
+                console.error("Supabase profile update error:", error);
+                setMessage($("profileMessage"), error.message || "Update failed", "error");
+            } finally {
+                button.disabled = false;
+            }
+        }
+
+        async function handleGoogleLogin() {
+            setMessage(
+                $("loginMessage"),
+                currentLanguage === "en" ? "Redirecting to Google..." : "جاري تحويلك إلى Google..."
+            );
+
+            const redirectTo = window.location.href.split("#")[0];
+
+            const { error } = await supabaseClient.auth.signInWithOAuth({
+                provider: "google",
+                options: {
+                    redirectTo
+                }
             });
 
+            if (error) {
+                setMessage($("loginMessage"), error.message, "error");
+            }
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            const email = $("loginEmail").value.trim();
+            const password = $("loginPassword").value;
+            setMessage($("loginMessage"), t("authLoginLoading"));
+
+            const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
             if (error) {
                 setMessage($("loginMessage"), error.message, "error");
                 return;
             }
 
+            await refreshCurrentUser();
             setMessage($("loginMessage"), t("authLoginSuccess"), "success");
-            setTimeout(() => hideModal($("authModal")), 1000);
+            setTimeout(() => hideModal($("authModal")), 700);
         }
 
         async function handleRegister(event) {
             event.preventDefault();
-
             const name = $("regName").value.trim();
             const email = $("regEmail").value.trim();
             const password = $("regPassword").value;
-
             setMessage($("registerMessage"), t("authRegisterLoading"));
 
-            const { error } = await supabaseClient.auth.signUp({
-                email,
-                password,
-                options: {
-                    data: { full_name: name }
-                }
+            const { data, error } = await supabaseClient.auth.signUp({
+                email, password, options: { data: { full_name: name } }
             });
 
             if (error) {
@@ -1481,15 +1936,32 @@
                 return;
             }
 
-            setMessage(
-                $("registerMessage"),
-                t("authRegisterSuccess"),
-                "success"
-            );
+            if (data?.user && !data.session) {
+                setMessage($("registerMessage"), t("authRegisterSuccess"), "success");
+            } else {
+                await refreshCurrentUser();
+                setMessage($("registerMessage"), t("authRegisterSuccess"), "success");
+            }
+        }
+
+        async function handleLogout() {
+            const { error } = await supabaseClient.auth.signOut();
+            if (error) {
+                setMessage($("accountMessage"), error.message, "error");
+                return;
+            }
+            currentUser = null;
+            updateAccountUI();
+            setMessage($("loginMessage"), "");
+            setMessage($("registerMessage"), "");
+            setTimeout(() => {
+                $("loginTabBtn").click();
+                showModal($("authModal"));
+            }, 50);
         }
 
         /* ================= UI EVENTS ================= */
-        function setupUI() {
+        async function setupUI() {
             const splash = $("splash-screen");
             const enter = $("enterButton");
 
@@ -1534,8 +2006,18 @@
             $("quantityPlus").addEventListener("click", () => normalizeQuantity(Number($("detailQuantity").value) + 1));
             $("detailQuantity").addEventListener("input", () => normalizeQuantity($("detailQuantity").value));
 
-            $("accountBtn").addEventListener("click", () => showModal($("authModal")));
+            $("accountBtn").addEventListener("click", async () => {
+                await refreshCurrentUser();
+                if (currentUser) {
+                    $("orderCustomerName").value = currentUser.user_metadata?.full_name || currentUser.user_metadata?.name || "";
+                    $("orderCustomerPhone").value = currentUser.user_metadata?.phone || "";
+                }
+                showModal($("authModal"));
+            });
             $("closeAuthBtn").addEventListener("click", () => hideModal($("authModal")));
+            $("googleLoginBtn").addEventListener("click", handleGoogleLogin);
+            $("logoutBtn").addEventListener("click", handleLogout);
+            $("refreshOrdersBtn").addEventListener("click", loadMyOrders);
 
             $("loginTabBtn").addEventListener("click", () => {
                 $("loginTabBtn").classList.add("active");
@@ -1553,6 +2035,7 @@
 
             $("loginForm").addEventListener("submit", handleLogin);
             $("registerForm").addEventListener("submit", handleRegister);
+            $("profileForm").addEventListener("submit", saveProfile);
 
             [$("cartModal"), $("checkoutModal"), $("authModal"), $("productDetailModal")].forEach((modal) => {
                 modal.addEventListener("click", (event) => {
@@ -1575,6 +2058,13 @@
 
             setupLogoDrag();
             setupChatbot();
+
+            supabaseClient.auth.onAuthStateChange((_event, session) => {
+                currentUser = session?.user || null;
+                updateAccountUI();
+            });
+
+            await refreshCurrentUser();
             applyLanguage();
         }
 
@@ -1690,7 +2180,7 @@
 
         /* ================= START ================= */
         document.addEventListener("DOMContentLoaded", async () => {
-            setupUI();
+            await setupUI();
             updateCartUI();
             await fetchProducts();
         });
